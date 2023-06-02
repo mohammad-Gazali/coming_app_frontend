@@ -1,6 +1,7 @@
 export interface Navlink {
     name: string;
     href: string;
+    permission: string | null;
 }
 
 export interface AuthTokens {

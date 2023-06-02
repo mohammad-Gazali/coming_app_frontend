@@ -7,6 +7,7 @@ import {
 import { Navlink } from "../../types/app";
 import { NavbarAuthButtonMobile } from "./NavbarAuthButton";
 import { NavbarContext } from "../../context";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -18,6 +19,8 @@ const NavbarMenu: FC<NavbarMenuProps> = ({ navlinks }) => {
 
 	const { anchorElNav, handleCloseNavMenu } = useContext(NavbarContext);
 	
+	const navigate = useNavigate();
+
 	return (
 		<Menu
 			id="menu-appbar"
@@ -38,7 +41,13 @@ const NavbarMenu: FC<NavbarMenuProps> = ({ navlinks }) => {
 			}}
 		>
 			{navlinks.map((link) => (
-				<MenuItem key={link.name} onClick={handleCloseNavMenu}>
+				<MenuItem 
+				key={link.name}
+				onClick={() => {
+					handleCloseNavMenu();
+					navigate(link.href);
+				}}
+				>
 					<Typography textAlign="center">{link.name}</Typography>
 				</MenuItem>
 			))}

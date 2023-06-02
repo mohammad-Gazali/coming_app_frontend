@@ -26,13 +26,13 @@ const NavbarAuthDialog = () => {
 
 	const handleClose = () => setOpenDialog(false)
 
-	const { mutate, isLoading } = useLogin({
+	const { login, isLoading } = useLogin({
 		username,
 		password,
 	});
 
 	const handleSubmit = () => {
-		mutate();
+		login();
 	};
 
 	return (
@@ -43,7 +43,6 @@ const NavbarAuthDialog = () => {
 					<AccountCircle
 						sx={{
 							color: "action.active",
-							me: 1,
 							my: 0.5,
 							display: { xs: "none", sm: "block" },
 						}}
@@ -64,7 +63,6 @@ const NavbarAuthDialog = () => {
 					<Lock
 						sx={{
 							color: "action.active",
-							me: 1,
 							my: 0.5,
 							display: { xs: "none", sm: "block" },
 						}}

@@ -1,32 +1,19 @@
+import axios from "axios";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 
-export const loginForToken = async ({ username, password }: { username: string; password: string }) => {
-    const res = await fetch(`${API_URL}/token/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            username,
-            password,
-        })
+
+export const loginForToken = ({ username, password}: {username: string; password: string}) => {
+	return axios.post(`${API_URL}/token`,{
+			username,
+			password,
+		}
+	);
+};
+
+export const refreshWithToken = async (refreshToken: string) => {
+    return axios.post(`${API_URL}/token/refresh`, {
+        refresh: refreshToken,
     })
-
-    const data = await res.json();
-
-    return data;
-}
-
-export const refreshWithToken = async () => {
-    const res = await fetch(`${API_URL}/token/refresh/`, {
-        method: "POST",
-        body: JSON.stringify({
-            refresh: "",
-        })
-    })
-
-    const data = await res.json();
-
-    return data;
-}
+};

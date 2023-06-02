@@ -1,12 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
 import { loginForToken } from "../services/auth";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GlobalContext, NavbarContext } from "../context";
-import jwt_decode from "jwt-decode";
+import { AxiosError } from "axios";
+import jwtDecode from "jwt-decode";
 
 
 
 export default function useLogin({ username, password }: { username: string; password: string; }) {
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const { 
         setAuthTokens, 
@@ -16,30 +18,60 @@ export default function useLogin({ username, password }: { username: string; pas
 
     const { setOpenDialog } = useContext(NavbarContext);
 
-    return useMutation({
-        mutationFn: () => loginForToken({ username, password }),
-        onSuccess: (data) => {
-            
-            setAuthTokens(data);
-            
-            localStorage.setItem("authTokens", JSON.stringify(data))
+    const login = async () => {
 
-            setUserData(jwt_decode(data.access));
-            
-            setToastData({
-                message: "تم تسجيل الدخول بنجاح.",
-                type: "success",
-                open: true,
-            })
+        setIsLoading(true);
 
-            setOpenDialog(false);
-        },
-        onError: () => {
-            setToastData({
-                message: "المعلومات غير صحيحة.",
-                type: "error",
-                open: true,
-            })
+        try {
+            const response = await loginForToken({ username, password });
+
+            const data = response.data;
+
+            if (response.status === 200) {
+
+                setAuthTokens(data);
+            
+                localStorage.setItem("authTokens", JSON.stringify(data))
+
+                setUserData(jwtDecode(data.access));
+            
+                setToastData({
+                    message: "تم تسجيل الدخول بنجاح.",
+                    type: "success",
+                    open: true,
+                })
+
+                setOpenDialog(false);
+
+            } else {
+
+                setToastData({
+                    message: "المعلومات غير صحيحة.",
+                    type: "error",
+                    open: true,
+                })
+
+            }
+
+        } catch (error) {
+            
+            if (error instanceof AxiosError) {
+                setToastData({
+                    message: error.message,
+                    open: true,
+                    type: "error",
+                });
+            }
+            
+            console.log(error);            
+
+        } finally {
+            setIsLoading(false);
         }
-    });
+    }
+
+    return {
+        login,
+        isLoading,
+    }
 }

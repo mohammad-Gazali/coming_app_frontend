@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { GlobalContext, NavbarContext } from "../../context";
 
 export const NavbarAuthButton = () => {
+	
 	const { setOpenDialog } = useContext(NavbarContext);
 	const { userData, setUserData, setAuthTokens } = useContext(GlobalContext);
 
@@ -11,6 +12,7 @@ export const NavbarAuthButton = () => {
 	const logout = () => {
 		setUserData(null);
 		setAuthTokens(null);
+		localStorage.removeItem("authTokens");
 	};
 
 	return (
@@ -30,21 +32,26 @@ export const NavbarAuthButtonMobile = () => {
 
 	const handleClickOpen = () => setOpenDialog(true);
 
+	const logout = () => {
+		setUserData(null);
+		setAuthTokens(null);
+		localStorage.removeItem("authTokens");	
+	}
+
 	return (
 		<>
 			<MenuItem
-				sx={{ display: { xs: "block", sm: "none" } }}
+				sx={{ display: { xs: "flex", sm: "none" } }}
 				onClick={() => {
 					if (userData !== null) {
-						setUserData(null);
-						setAuthTokens(null);
+						logout();
 					} else {
 						handleCloseNavMenu();
 						handleClickOpen();
 					}
 				}}
 			>
-				<Typography textAlign="center">
+				<Typography>
 					{userData !== null ? "تسجيل الخروج" : "تسجيل الدخول"}
 				</Typography>
 			</MenuItem>

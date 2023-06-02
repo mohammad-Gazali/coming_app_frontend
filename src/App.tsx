@@ -1,23 +1,30 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Navbar,Footer, Toast } from "./layout";
-import { HomePage } from "./pages";
+import { BrowserRouter as Router } from "react-router-dom";
 import "@fontsource/cairo/400.css";
 import "@fontsource/cairo/700.css";
+import AppRoutes from "./AppRoutes";
+import { Container } from "@mui/material";
 
 
 
 function App() {
 	return (
-		<>
+		<Router>
 			<Navbar />
-			<Router>
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-				</Routes>
-			</Router>
-      <Toast />
+			<Container
+			fixed
+			sx={{
+				pt: {
+					xs: 20,
+					sm: 21
+				},
+			}}
+			>
+				<AppRoutes />
+			</Container>
+      		<Toast />
 			<Footer />
-		</>
+		</Router>
 	);
 }
 
